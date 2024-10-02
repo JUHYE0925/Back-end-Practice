@@ -8,17 +8,49 @@
           FROM kids
     </entry>
 
-    <entry key="selectSpecificTeacher">
+    <entry key="selectTeacherById">
         SELECT
                *
           FROM teacher
-         WHERE ? = ?
+         WHERE teacher_id = ?
+    </entry>
+
+    <entry key="selectTeacherByName">
+        SELECT
+        *
+        FROM teacher
+        WHERE teacher_name = ?
+    </entry>
+
+    <entry key="selectTeacherByClass">
+        SELECT
+        *
+        FROM teacher
+        WHERE teacher_class = ?
+    </entry>
+
+    <entry key="selectTeacherByGrade">
+        SELECT
+        *
+        FROM teacher
+        WHERE teacher_grade = ?
     </entry>
 
     <entry key="selectAllTeacherInfo">
         SELECT
                *
           FROM teacher
+    </entry>
+    <entry key="insertNewTeacher">
+        INSERT INTO teacher VALUES
+        ( ?,
+          ?,
+          ?,
+          ?,
+          ?,
+          ?,
+          ?,
+          DEFAULT )
     </entry>
     
 </properties>

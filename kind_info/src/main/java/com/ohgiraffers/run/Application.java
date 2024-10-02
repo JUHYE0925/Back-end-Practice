@@ -42,15 +42,11 @@ public class Application {
                     int num1 = sc.nextInt();
 
                     switch (num1) {
-                        case 1:
-                            registDAO.allTeacherInfo(con);
-                            break;
-                        case 2 :
-                            registDAO.selectSpecificTeacher(con);
-                            break;
-                        case 6:
-                            registDAO.allKidsInfo(con);
-                            break;
+                        case 1: registDAO.allTeacherInfo(con); break;
+                        case 2 : registDAO.selectSpecificTeacher(con); break;
+                        case 3 : registDAO.addNewTeacher(con); break;
+
+                        case 6: registDAO.allKidsInfo(con); break;
 
                     }
 
