@@ -2,12 +2,14 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
     <comment/>
+<!--  전체 원생 정보 조회  -->
     <entry key="selectAllKidsInfo">
         SELECT
                *
           FROM kids
     </entry>
 
+<!--  아이디로 직원 정보 조회  -->
     <entry key="selectTeacherById">
         SELECT
                *
@@ -15,6 +17,14 @@
          WHERE teacher_id = ?
     </entry>
 
+<!--  마지막 직원 사번 조회  -->
+    <entry key="idOfLastTeacher">
+        SELECT
+               MAX(A.teacher_id)
+          FROM teacher A
+    </entry>
+
+<!--  이름으로 직원 정보 조회  -->
     <entry key="selectTeacherByName">
         SELECT
         *
@@ -22,6 +32,7 @@
         WHERE teacher_name = ?
     </entry>
 
+<!--  반 명으로 직원 정보 조회  -->
     <entry key="selectTeacherByClass">
         SELECT
         *
@@ -29,6 +40,7 @@
         WHERE teacher_class = ?
     </entry>
 
+<!--  직급으로 직원 정보 조회  -->
     <entry key="selectTeacherByGrade">
         SELECT
         *
@@ -36,11 +48,14 @@
         WHERE teacher_grade = ?
     </entry>
 
+<!--  전체 직원 정보 조회  -->
     <entry key="selectAllTeacherInfo">
         SELECT
                *
           FROM teacher
     </entry>
+
+<!--  새로운 직원 정보 추가  -->
     <entry key="insertNewTeacher">
         INSERT INTO teacher VALUES
         ( ?,
@@ -52,5 +67,22 @@
           ?,
           DEFAULT )
     </entry>
-    
+
+<!--  직원 정보 수정  -->
+    <entry key="updateTeacherInfo">
+        UPDATE teacher
+           SET teacher_name = ?,
+               teacher_grade = ?,
+               teacher_class = ?,
+               teacher_phone = ?,
+               teacher_salary = ?,
+               teacher_off = ?
+         WHERE teacher_id = ?
+    </entry>
+
+<!--  직원 정보 수정  -->
+    <entry key="deleteTeacherInfo">
+        DELETE FROM teacher
+         WHERE teacher_id = ?
+    </entry>
 </properties>

@@ -16,9 +16,7 @@ import static com.ohgiraffers.common.JDBCTemplate.close;
 public class KindergartenDAO {
 
     private Properties prop = new Properties();
-
-    TeacherDTO teacherDTO = null;
-    List<TeacherDTO> teacherList = null;
+    Scanner sc = new Scanner(System.in);
 
 
     public KindergartenDAO(){
@@ -46,7 +44,7 @@ public class KindergartenDAO {
             allTeacher = new ArrayList<>();
 
             while(rset.next()){
-                teacherDTO = new TeacherDTO();
+                TeacherDTO teacherDTO = new TeacherDTO();
 
                 teacherDTO.setTeacherId(rset.getInt("teacher_id"));
                 teacherDTO.setTeacherName(rset.getString("teacher_name"));
@@ -76,9 +74,8 @@ public class KindergartenDAO {
         PreparedStatement pstmt = null;
         ResultSet rset = null;
 
-        teacherList = new ArrayList<>();
+        List<TeacherDTO> teacherList = new ArrayList<>();
 
-            Scanner sc = new Scanner(System.in);
             System.out.println("조회할 기준을 선택해주세요 (1. 직원 사번, 2. 직원 이름, 3. 직원 담당 반, 4. 직원 직급) : ");
             int selectStandard = sc.nextInt();
 
@@ -95,7 +92,7 @@ public class KindergartenDAO {
                             rset = pstmt.executeQuery();
 
                             if (rset.next()) {
-                                teacherDTO = new TeacherDTO();
+                                TeacherDTO teacherDTO = new TeacherDTO();
 
                                 teacherDTO.setTeacherId(rset.getInt("teacher_id"));
                                 teacherDTO.setTeacherName(rset.getString("teacher_name"));
@@ -106,6 +103,7 @@ public class KindergartenDAO {
                                 teacherDTO.setTeacherSalary(rset.getInt("teacher_salary"));
                                 teacherDTO.setTeacherOff(rset.getString("teacher_off"));
 
+                                System.out.println("specificTeacher = " + teacherDTO);;
                             }
                         } catch (SQLException e) {
                             throw new RuntimeException(e);
@@ -114,7 +112,6 @@ public class KindergartenDAO {
                             close(rset);
                         }
 
-                        System.out.println("specificTeacher = " + teacherDTO);;
                         break;
 
                     case 2:
@@ -131,7 +128,7 @@ public class KindergartenDAO {
                             rset = pstmt.executeQuery();
 
                             if (rset.next()) {
-                                teacherDTO = new TeacherDTO();
+                                TeacherDTO teacherDTO = new TeacherDTO();
 
                                 teacherDTO.setTeacherId(rset.getInt("teacher_id"));
                                 teacherDTO.setTeacherName(rset.getString("teacher_name"));
@@ -142,13 +139,14 @@ public class KindergartenDAO {
                                 teacherDTO.setTeacherSalary(rset.getInt("teacher_salary"));
                                 teacherDTO.setTeacherOff(rset.getString("teacher_off"));
 
+                                System.out.println("specificTeacher = " + teacherDTO);;
+
                             }
 
                         } catch (SQLException e) {
                             throw new RuntimeException(e);
                         }
 
-                        System.out.println("specificTeacher = " + teacherDTO);;
                         break;
 
                     case 3:
@@ -164,7 +162,7 @@ public class KindergartenDAO {
 
                             while (rset.next()) {
 
-                                teacherDTO = new TeacherDTO();
+                                TeacherDTO teacherDTO = new TeacherDTO();
 
                                 teacherDTO.setTeacherId(rset.getInt("teacher_id"));
                                 teacherDTO.setTeacherName(rset.getString("teacher_name"));
@@ -199,7 +197,7 @@ public class KindergartenDAO {
                             rset = pstmt.executeQuery();
 
                             while (rset.next()) {
-                                teacherDTO = new TeacherDTO();
+                                TeacherDTO teacherDTO = new TeacherDTO();
 
                                 teacherDTO.setTeacherId(rset.getInt("teacher_id"));
                                 teacherDTO.setTeacherName(rset.getString("teacher_name"));
@@ -224,29 +222,62 @@ public class KindergartenDAO {
                 }
     }
 
-    public void addNewTeacher(Connection con){
-        PreparedStatement pstmt = null;
+    public int maxTeacherID(Connection con){
+
+        Statement stmt = null;
         ResultSet rset = null;
+
+        int lastTeacherId = 0;
+
+
+        try {
+            String query = prop.getProperty("idOfLastTeacher");
+            stmt = con.createStatement();
+            rset = stmt.executeQuery(query);
+
+            if(rset.next()){
+                lastTeacherId = rset.getInt("MAX(A.teacher_id)");
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally{
+            close(stmt);
+            close(rset);
+        }
+
+        return lastTeacherId;
+    }
+
+    public int addNewTeacher(Connection con){
+        KindergartenDAO kindergartenDAO = new KindergartenDAO();
+        int lastTeacherId = kindergartenDAO.maxTeacherID(con);
+
+        PreparedStatement pstmt = null;
         int result = 0;
 
-        teacherDTO = new TeacherDTO();
-        teacherList = new ArrayList<>();
+        TeacherDTO teacherDTO = new TeacherDTO();
 
-        Scanner sc = new Scanner(System.in);
         System.out.println("새로운 직원의 사번을 입력해주세요 : ");
+        System.out.println("지정 가능한 사번은 " + (lastTeacherId + 1) + " 부터 가능합니다.");
         int newTeacherId = sc.nextInt();
         System.out.println("새로운 직원의 이름을 입력해주세요 : ");
         sc.nextLine();
         String newTeacherName = sc.nextLine();
-        System.out.println("새로운 직원의 직급을 선택해주세요 (1. 담임, 2. 보조) :  ");
+        System.out.println("새로운 직원의 직급을 선택해주세요.  ");
+        System.out.println(" 1. 담임 ");
+        System.out.println(" 2. 보조 ");
         int newTeacherGrade = sc.nextInt();
-        System.out.println("새로운 직원의 담당 반을 배정해주세요 : (1.햇님반, 2.달님반, 3.별님반, 4.구름반) : ");
+        System.out.println("새로운 직원의 담당 반을 배정해주세요. ");
+        System.out.println(" 1.햇님반 ");
+        System.out.println(" 2.달님반 ");
+        System.out.println(" 3.별님반 ");
+        System.out.println(" 4.구름반 ");
         int newTeacherClass = sc.nextInt();
-        System.out.println("새로운 직원의 생일을 입력해주세요 : ");
+        System.out.println("새로운 직원의 생년월일 8자리 숫자 전체를 입력해주세요 : ");
         sc.nextLine();
         String newTeacherBirth = sc.nextLine();
         System.out.println("추가할 직원의 연락처를 입력해주세요 (예.010-XXXX-XXXX) : ");
-        sc.nextLine();
         String newTeacherPhone = sc.nextLine();
         System.out.println("새로운 직원의 연봉을 입력해주세요 : ");
         int newTeacherSalary = sc.nextInt();
@@ -272,6 +303,31 @@ public class KindergartenDAO {
 
             result = pstmt.executeUpdate();
 
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            close(pstmt);
+        }
+
+        if(result > 0){
+            System.out.println("새로운 직원 정보를 정상적으로 등록했습니다.");
+        } else {
+            System.out.println("새로운 직원 정보 등록을 실패했습니다.");
+        }
+
+        return result;
+    }
+
+    public TeacherDTO selectedTeacherId(Connection con, int selectedTeacherId){
+        PreparedStatement pstmt = null;
+        ResultSet rset = null;
+        TeacherDTO teacherDTO = null;
+
+        try {
+            String query = prop.getProperty("selectTeacherById");
+            pstmt = con.prepareStatement(query);
+            pstmt.setInt(1, selectedTeacherId);
+
             rset = pstmt.executeQuery();
 
             if(rset.next()){
@@ -285,12 +341,160 @@ public class KindergartenDAO {
                 teacherDTO.setTeacherPhone(rset.getString("teacher_phone"));
                 teacherDTO.setTeacherSalary(rset.getInt("teacher_salary"));
                 teacherDTO.setTeacherOff(rset.getString("teacher_off"));
+
             }
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        } //finally {
+          //  close(pstmt);
+          //  close(rset);
+       // }
+
+        return teacherDTO;
+    }
+
+    public void updateTeacherInfo(Connection con){
+
+        PreparedStatement pstmt = null;
+        int result = 0;
+        allTeacherInfo(con);
+        System.out.println("정보를 수정할 직원의 사번을 입력해주세요 : ");
+
+        int teacherId = sc.nextInt();
+
+        TeacherDTO teacherDTO = selectedTeacherId(con, teacherId);
+
+        System.out.println("수정할 정보를 선택해주세요 : ");
+        System.out.println(" 1. 전체 (이름, 직급, 반, 연락처, 연봉, 휴가) ");
+        System.out.println(" 2. 이름 ");
+        System.out.println(" 3. 직급 ");
+        System.out.println(" 4. 반 ");
+        System.out.println(" 5. 연락처 ");
+        System.out.println(" 6. 연봉 ");
+        System.out.println(" 7. 휴가 ");
+        int selectedTypeOfInfo = sc.nextInt();
+
+        String query = prop.getProperty("updateTeacherInfo");
+        try {
+            pstmt = con.prepareStatement(query);
+
+            switch(selectedTypeOfInfo) {
+                case 1 :
+                    System.out.println("수정할 이름을 입력해주세요 : ");
+                    sc.nextLine();
+                    String newName1 = sc.nextLine();
+                    System.out.println("수정할 직급을 선택해주세요 : ");
+                    System.out.println(" 1. 담임 ");
+                    System.out.println(" 2. 보조 ");
+                    int newGrade1 = sc.nextInt();
+                    System.out.println("수정할 반을 선택해주세요 : ");
+                    System.out.println(" 1. 햇님반 ");
+                    System.out.println(" 2. 달님반 ");
+                    System.out.println(" 3. 별님반 ");
+                    System.out.println(" 4. 구름반 ");
+                    int newClass1 = sc.nextInt();
+                    System.out.println("수정할 연락처를 입력해주세요 : ");
+                    sc.nextLine();
+                    String newPhone1 = sc.nextLine();
+                    System.out.println("수정할 연봉을 입력해주세요 : ");
+                    int newSalary1 = sc.nextInt();
+                    System.out.println("수정할 휴가 내용을 입력해주세요 : ");
+                    sc.nextLine();
+                    String newOff1 = sc.nextLine();
+                    teacherDTO.setTeacherName(newName1);
+                    switch(newGrade1){
+                        case 1 : teacherDTO.setTeacherGrade("담임"); break;
+                        case 2 : teacherDTO.setTeacherGrade("보조");break;
+                    }
+                    switch(newClass1){
+                        case 1 : teacherDTO.setTeacherClass("햇님반"); break;
+                        case 2 : teacherDTO.setTeacherClass("달님반"); break;
+                        case 3 : teacherDTO.setTeacherClass("별님반"); break;
+                        case 4 : teacherDTO.setTeacherClass("구름반"); break;
+                    }
+                    teacherDTO.setTeacherPhone(newPhone1);
+                    teacherDTO.setTeacherSalary(newSalary1);
+                    teacherDTO.setTeacherOff(newOff1);
+                    break;
+                case 2 :
+                    System.out.print("수정할 이름을 입력해주세요 : ");
+                    sc.nextLine();
+                    String newName = sc.nextLine();
+                    teacherDTO.setTeacherName(newName);
+                    break;
+                case 3 :
+                    System.out.println("수정할 직급을 선택해주세요 : ");
+                    System.out.println(" 1. 담임 ");
+                    System.out.println(" 2. 보조 ");
+                    int newGrade = sc.nextInt();
+                    switch(newGrade){
+                        case 1 : teacherDTO.setTeacherGrade("담임"); break;
+                        case 2 : teacherDTO.setTeacherGrade("보조");break;
+                    }
+                    break;
+                case 4 :
+                    System.out.println("수정할 반을 선택해주세요 : ");
+                    System.out.println(" 1. 햇님반 ");
+                    System.out.println(" 2. 달님반 ");
+                    System.out.println(" 3. 별님반 ");
+                    System.out.println(" 4. 구름반 ");
+                    int newClass = sc.nextInt();
+                    switch(newClass){
+                        case 1 : teacherDTO.setTeacherClass("햇님반"); break;
+                        case 2 : teacherDTO.setTeacherClass("달님반"); break;
+                        case 3 : teacherDTO.setTeacherClass("별님반"); break;
+                        case 4 : teacherDTO.setTeacherClass("구름반"); break;
+                    }
+                    break;
+                case 5 :
+                    System.out.println("수정할 연락처를 입력해주세요 : ");
+                    sc.nextLine();
+                    String newPhone = sc.nextLine();
+                    teacherDTO.setTeacherPhone(newPhone);
+                    break;
+                case 6 :
+                    System.out.println("수정할 연봉을 입력해주세요 : ");
+                    int newSalary = sc.nextInt();
+                    teacherDTO.setTeacherSalary(newSalary);
+                    break;
+                case 7 :
+                    System.out.println("수정할 휴가 내용을 입력해주세요 : ");
+                    sc.nextLine();
+                    String newOff = sc.nextLine();
+                    teacherDTO.setTeacherOff(newOff);
+                    break;
+            }
+
+            pstmt.setString(1, teacherDTO.getTeacherName());
+            pstmt.setString(2, teacherDTO.getTeacherGrade());
+            pstmt.setString(3, teacherDTO.getTeacherClass());
+            pstmt.setString(4, teacherDTO.getTeacherPhone());
+            pstmt.setInt(5, teacherDTO.getTeacherSalary());
+            pstmt.setString(6, teacherDTO.getTeacherOff());
+            pstmt.setInt(7, teacherDTO.getTeacherId());
+
+            result = pstmt.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
-        System.out.println(teacherDTO);
+    }
+
+    public void deleteTeacherInfo(Connection con){
+
+        PreparedStatement pstmt = null;
+        int result = 0;
+
+        allTeacherInfo(con);
+
+        System.out.println("삭제할 직원의 사번을 입력해주세요 : ");
+        int selectedteacherId = sc.nextInt();
+
+        selectedTeacherId(con,selectedteacherId);
+
+        String query = prop.getProperty("deleteTeacherInfo");
+
 
     }
 

@@ -9,6 +9,8 @@ import static com.ohgiraffers.common.JDBCTemplate.getConnection;
 
 public class Application {
 
+
+
     public static void main(String[] args) {
 
         Connection con = getConnection();
@@ -42,9 +44,13 @@ public class Application {
                     int num1 = sc.nextInt();
 
                     switch (num1) {
-                        case 1: registDAO.allTeacherInfo(con); break;
+                        case 1 : registDAO.allTeacherInfo(con); break;
                         case 2 : registDAO.selectSpecificTeacher(con); break;
-                        case 3 : registDAO.addNewTeacher(con); break;
+                        case 3 : registDAO.addNewTeacher(con);
+                                 registDAO.allTeacherInfo(con); break;
+                        case 4 : registDAO.updateTeacherInfo(con);
+                                 registDAO.allTeacherInfo(con); break;
+                        case 5 :
 
                         case 6: registDAO.allKidsInfo(con); break;
 
