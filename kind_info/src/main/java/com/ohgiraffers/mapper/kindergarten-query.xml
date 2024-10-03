@@ -2,13 +2,6 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
     <comment/>
-<!--  전체 원생 정보 조회  -->
-    <entry key="selectAllKidsInfo">
-        SELECT
-               *
-          FROM kids
-    </entry>
-
 <!--  아이디로 직원 정보 조회  -->
     <entry key="selectTeacherById">
         SELECT
@@ -80,9 +73,76 @@
          WHERE teacher_id = ?
     </entry>
 
-<!--  직원 정보 수정  -->
+<!--  직원 정보 삭제  -->
     <entry key="deleteTeacherInfo">
         DELETE FROM teacher
          WHERE teacher_id = ?
+    </entry>
+
+<!--  전체 원생 정보 조회  -->
+    <entry key="selectAllKidsInfo">
+        SELECT
+        *
+        FROM kids
+    </entry>
+
+<!--  아이디로 원생 정보 조회  -->
+    <entry key="selectKidsById">
+       SELECT
+              *
+         FROM kids
+        WHERE kids_id = ?
+    </entry>
+
+<!--  특정 원생 정보 조회  -->
+    <entry key="specificKidsInfo">
+        SELECT
+        *
+        FROM kids
+        WHERE kids_id = ? OR
+        kids_name = ? OR
+        kids_birth LIKE ? OR
+        kids_class = ? OR
+        kids_gender = ?
+    </entry>
+
+<!--  마지막 원생 ID 조회  -->
+    <entry key="lastKidsId">
+        SELECT
+               MAX(A.kids_id)
+          FROM kids A
+    </entry>
+
+<!--  새로운 원생 정보 추가  -->
+    <entry key="insertNewKid">
+        INSERT INTO kids VALUES
+        (
+         NULL,
+         ?,
+         ?,
+         ?,
+         ?,
+         ?,
+         ?,
+         ?
+        )
+    </entry>
+
+<!--  원생 정보 수정  -->
+    <entry key="updateKidInfo">
+        UPDATE kids
+           SET kids_name = ?,
+               kids_birth = ?,
+               kids_class = ?,
+               kids_adress = ?,
+               parents_phone = ?,
+               kids_significant = ?
+        WHERE kids_id = ?
+    </entry>
+
+<!--  원생 정보 삭제  -->
+    <entry key="deleteKidInfo">
+        DELETE FROM kids
+         WHERE kids_id = ?
     </entry>
 </properties>

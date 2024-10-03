@@ -46,17 +46,19 @@ public class Application {
                     switch (num1) {
                         case 1 : registDAO.allTeacherInfo(con); break;
                         case 2 : registDAO.selectSpecificTeacher(con); break;
-                        case 3 : registDAO.addNewTeacher(con);
-                                 registDAO.allTeacherInfo(con); break;
-                        case 4 : registDAO.updateTeacherInfo(con);
-                                 registDAO.allTeacherInfo(con); break;
-                        case 5 :
-
-                        case 6: registDAO.allKidsInfo(con); break;
+                        case 3 : registDAO.addNewTeacher(con);break;
+                        case 4 : registDAO.updateTeacherInfo(con); break;
+                        case 5 : registDAO.deleteTeacherInfo(con); break;
+                        case 6 : registDAO.allKidsInfo(con); break;
+                        case 7 : registDAO.specificKidsInfo(con); break;
+                        case 8 : registDAO.addNewKid(con); break;
+                        case 9 : registDAO.updateKidsInfo(con); break;
+                        case 10 : registDAO.deleteKidInfo(con); break;
 
                     }
 
                     if (num1 == 0) {
+                        System.out.println("프로그램을 종료합니다.");
                         break;
                     }
                 }
@@ -75,9 +77,14 @@ public class Application {
 
                 switch(num2){
                     case 1 : registDAO.allKidsInfo(con); break;
+                    case 2 : registDAO.specificKidsInfo(con); break;
+                    case 3 : registDAO.addNewKid(con); break;
+                    case 4 : registDAO.updateKidsInfo(con); break;
+                    case 5 : registDAO.deleteKidInfo(con); break;
                 }
 
                 if(num2 == 0){
+                    System.out.println("프로그램을 종료합니다.");
                     break;
                 }
             } else {
