@@ -5,18 +5,20 @@ public class TeacherDTO {
     private String teacherName;
     private String teacherGrade;
     private String teacherClass;
+    private int teacherSuperior;  // 해당 필드 사용하는 곳에 모두 값 주기
     private String teacherBirth;
     private String teacherPhone;
     private int teacherSalary;
     private String teacherOff;
 
-    public TeacherDTO(){}
+    public TeacherDTO() {}
 
-    public TeacherDTO(int teacherId, String teacherName, String teacherGrade, String teacherClass, String teacherBirth, String teacherPhone, int teacherSalary, String teacherOff) {
+    public TeacherDTO(int teacherId, String teacherName, String teacherGrade, String teacherClass, int teacherSuperior, String teacherBirth, String teacherPhone, int teacherSalary, String teacherOff) {
         this.teacherId = teacherId;
         this.teacherName = teacherName;
         this.teacherGrade = teacherGrade;
         this.teacherClass = teacherClass;
+        this.teacherSuperior = teacherSuperior;
         this.teacherBirth = teacherBirth;
         this.teacherPhone = teacherPhone;
         this.teacherSalary = teacherSalary;
@@ -53,6 +55,14 @@ public class TeacherDTO {
 
     public void setTeacherClass(String teacherClass) {
         this.teacherClass = teacherClass;
+    }
+
+    public int getTeacherSuperior() {
+        return teacherSuperior;
+    }
+
+    public void setTeacherSuperior(int teacherSuperior) {
+        this.teacherSuperior = teacherSuperior;
     }
 
     public String getTeacherBirth() {
@@ -94,6 +104,7 @@ public class TeacherDTO {
                 ", teacherName='" + teacherName + '\'' +
                 ", teacherGrade='" + teacherGrade + '\'' +
                 ", teacherClass='" + teacherClass + '\'' +
+                ", teacherSuperior=" + teacherSuperior +
                 ", teacherBirth='" + teacherBirth + '\'' +
                 ", teacherPhone='" + teacherPhone + '\'' +
                 ", teacherSalary=" + teacherSalary +
