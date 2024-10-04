@@ -10,6 +10,30 @@
          WHERE teacher_id = ?
     </entry>
 
+<!--  매니저 사번 조회  -->
+    <entry key="selectManagerCode">
+        SELECT
+               manager_code
+          FROM manager
+    </entry>
+
+<!--  매니저가 관리하는 직원 조회 by 매니저 사번  -->
+    <entry key="mySubordinate">
+        SELECT
+               A.*
+          FROM teacher A
+          JOIN manage_teacher B ON A.teacher_id = B.teacher_id
+         WHERE B.manager_code = ?
+    </entry>
+
+<!--  직원의 이름과 사번만 조회  -->
+    <entry key="selectTeacherIdAndName">
+        SELECT
+               teacher_id,
+               teacher_name
+          FROM teacher
+    </entry>
+
 <!--  마지막 직원 사번 조회  -->
     <entry key="idOfLastTeacher">
         SELECT
