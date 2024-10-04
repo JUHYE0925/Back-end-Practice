@@ -52,6 +52,7 @@ public class KindergartenDAO {
                 teacherDTO.setTeacherName(rset.getString("teacher_name"));
                 teacherDTO.setTeacherGrade(rset.getString("teacher_grade"));
                 teacherDTO.setTeacherClass(rset.getString("teacher_class"));
+//                teacherDTO.setTeacherSuperior(rset.getInt("teacher_superior"));
                 teacherDTO.setTeacherBirth(rset.getString("teacher_birth"));
                 teacherDTO.setTeacherPhone(rset.getString("teacher_phone"));
                 teacherDTO.setTeacherSalary(rset.getInt("teacher_salary"));
@@ -104,6 +105,9 @@ public class KindergartenDAO {
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        } finally{
+            close(pstmt);
+            close(rset);
         }
         
         for(TeacherDTO subordinateTeacher : teacherList){

@@ -25,10 +25,13 @@ CREATE TABLE IF NOT EXISTS teacher(
     teacher_name VARCHAR(10) NOT NULL COMMENT '선생님 이름',
     teacher_grade VARCHAR(20) NOT NULL CHECK(teacher_grade IN('담임', '보조')) COMMENT '선생님 직급',
     teacher_class VARCHAR(5) CHECK(teacher_class IN('햇님반','달님반','별님반', '구름반')) COMMENT '선생님 담당 반',
+    teacher_superior int COMMENT '직속상관 사번',
     teacher_birth VARCHAR(20) NOT NULL COMMENT '선생님 생년월일',
     teacher_phone VARCHAR(15) UNIQUE NOT NULL COMMENT '선생님 연락처',
     teacher_salary INT NOT NULL COMMENT '선생님 연봉',
-    teacher_off VARCHAR(20) DEFAULT 'X' COMMENT '선생님 연차유무'
+    teacher_off VARCHAR(20) DEFAULT 'X' COMMENT '선생님 연차유무',
+    FOREIGN KEY(manager_code)
+    REFERENCES manager(manager_code)
 )ENGINE=INNODB COMMENT '선생님';
 
 -- 원생 테이블 생성
@@ -90,14 +93,14 @@ INSERT INTO manager VALUES (101, '권지옹', '19610829', '원장', '010-1961-08
 INSERT INTO manager VALUES (102, '강말자', '19630532', '부원장', '010-1963-0532', DEFAULT);
 
 -- 선생님 테이블 데이터 입력
-INSERT INTO teacher VALUES (201, '나미리', '담임', '햇님반', '19900204', '010-1990-0204', 2500000, DEFAULT);
-INSERT INTO teacher VALUES (202, '채성화', '담임', '달님반', '19900706', '010-1990-0706', 2500000, '출산휴가예정');
-INSERT INTO teacher VALUES (203, '차은주', '담임', '별님반', '19910123', '010-1991-0123', 2400000, DEFAULT);
-INSERT INTO teacher VALUES (204, '이창민', '담임', '구름반', '19920502', '010-1992-0502', 2350000, DEFAULT);
-INSERT INTO teacher VALUES (205, '봉미선', '보조', '햇님반', '19951010', '010-1995-1010', 2250000, DEFAULT);
-INSERT INTO teacher VALUES (206, '유이슬', '보조', '달님반', '19991123', '010-1999-1123', 2250000, DEFAULT);
-INSERT INTO teacher VALUES (207, '김흑곰', '보조', '별님반', '19940915', '010-1994-0915', 2250000, DEFAULT);
-INSERT INTO teacher VALUES (208, '엄상현', '보조', '구름반', '19951122', '010-1995-1122', 2200000, DEFAULT);
+INSERT INTO teacher VALUES (201, '나미리', '담임', '햇님반', 101, '19900204', '010-1990-0204', 2500000, DEFAULT);
+INSERT INTO teacher VALUES (202, '채성화', '담임', '달님반', 102, '19900706', '010-1990-0706', 2500000, '출산휴가예정');
+INSERT INTO teacher VALUES (203, '차은주', '담임', '별님반', 101, '19910123', '010-1991-0123', 2400000, DEFAULT);
+INSERT INTO teacher VALUES (204, '이창민', '담임', '구름반', 102, '19920502', '010-1992-0502', 2350000, DEFAULT);
+INSERT INTO teacher VALUES (205, '봉미선', '보조', '햇님반', 101, '19951010', '010-1995-1010', 2250000, DEFAULT);
+INSERT INTO teacher VALUES (206, '유이슬', '보조', '달님반', 102, '19991123', '010-1999-1123', 2250000, DEFAULT);
+INSERT INTO teacher VALUES (207, '김흑곰', '보조', '별님반', 101, '19940915', '010-1994-0915', 2250000, DEFAULT);
+INSERT INTO teacher VALUES (208, '엄상현', '보조', '구름반', 102, '19951122', '010-1995-1122', 2200000, DEFAULT);
 
 -- 원생 테이블 테이터 입력
 INSERT INTO kids VALUES (301, '강치타', '20180523', '햇님반', '서울특별시 마포구 대흥동', '남', '010-2018-0523', '달리기 잘함');
@@ -165,19 +168,19 @@ INSERT INTO manage_kids VALUES (101, '햇님반', 304, '고지라');
 INSERT INTO manage_kids VALUES (101, '햇님반', 305, '강하나');
 INSERT INTO manage_kids VALUES (101, '햇님반', 306, '박은하');
 
-INSERT INTO manage_kids VALUES (101, '달님반', 307, '신짱구');
-INSERT INTO manage_kids VALUES (101, '달님반', 308, '김철수');
-INSERT INTO manage_kids VALUES (101, '달님반', 309, '한유리');
-INSERT INTO manage_kids VALUES (101, '달님반', 310, '이훈이');
-INSERT INTO manage_kids VALUES (101, '달님반', 311, '보맹구');
-INSERT INTO manage_kids VALUES (101, '달님반', 312, '한수지');
+INSERT INTO manage_kids VALUES (102, '달님반', 307, '신짱구');
+INSERT INTO manage_kids VALUES (102, '달님반', 308, '김철수');
+INSERT INTO manage_kids VALUES (102, '달님반', 309, '한유리');
+INSERT INTO manage_kids VALUES (102, '달님반', 310, '이훈이');
+INSERT INTO manage_kids VALUES (102, '달님반', 311, '보맹구');
+INSERT INTO manage_kids VALUES (102, '달님반', 312, '한수지');
 
-INSERT INTO manage_kids VALUES (102, '별님반', 313, '노미소');
-INSERT INTO manage_kids VALUES (102, '별님반', 314, '김민지');
-INSERT INTO manage_kids VALUES (102, '별님반', 315, '나초롱');
-INSERT INTO manage_kids VALUES (102, '별님반', 316, '이새롬');
-INSERT INTO manage_kids VALUES (102, '별님반', 317, '박슬기');
-INSERT INTO manage_kids VALUES (102, '별님반', 318, '배한별');
+INSERT INTO manage_kids VALUES (101, '별님반', 313, '노미소');
+INSERT INTO manage_kids VALUES (101, '별님반', 314, '김민지');
+INSERT INTO manage_kids VALUES (101, '별님반', 315, '나초롱');
+INSERT INTO manage_kids VALUES (101, '별님반', 316, '이새롬');
+INSERT INTO manage_kids VALUES (101, '별님반', 317, '박슬기');
+INSERT INTO manage_kids VALUES (101, '별님반', 318, '배한별');
 
 INSERT INTO manage_kids VALUES (102, '구름반', 319, '강은하');
 INSERT INTO manage_kids VALUES (102, '구름반', 320, '이다은');
@@ -188,10 +191,10 @@ INSERT INTO manage_kids VALUES (102, '구름반', 324, '김보나');
 
 -- 직원 관리 테이블 데이터 입력
 INSERT INTO manage_teacher VALUES (101, 201, '나미리');
-INSERT INTO manage_teacher VALUES (101, 202, '채성화');
+INSERT INTO manage_teacher VALUES (102, 202, '채성화');
 INSERT INTO manage_teacher VALUES (101, 205, '봉미선');
-INSERT INTO manage_teacher VALUES (101, 206, '유이슬');
-INSERT INTO manage_teacher VALUES (102, 203, '차은주');
+INSERT INTO manage_teacher VALUES (102, 206, '유이슬');
+INSERT INTO manage_teacher VALUES (101, 203, '차은주');
 INSERT INTO manage_teacher VALUES (102, 204, '이창민');
-INSERT INTO manage_teacher VALUES (102, 207, '김흑곰');
+INSERT INTO manage_teacher VALUES (101, 207, '김흑곰');
 INSERT INTO manage_teacher VALUES (102, 208, '엄상현');
