@@ -63,6 +63,9 @@ public class Application {
                                         case 5:
                                             registDAO.deleteTeacherInfo(con);
                                             break;
+                                        case 9 : break;
+                                        default:
+                                            System.out.println("번호를 다시 입력해주세요 : "); break;
                                 }
                                 if(num2 == 9){
                                     System.out.println();
@@ -86,6 +89,9 @@ public class Application {
                                             break;
                                         case 2: registDAO.addTeacherNotExistsSuperior(con, code); break;
                                         case 3: registDAO.deleteNotExistsSuperior(con, code); break;
+                                        case 9 : break;
+                                        default:
+                                            System.out.println("번호를 다시 입력해주세요 : "); break;
                                     }
                                     if(num3 == 9){
                                         System.out.println();
@@ -121,6 +127,11 @@ public class Application {
                                         case 5:
                                             registDAO.deleteKidInfo(con);
                                             break;
+
+                                        case 9 : break;
+
+                                        default:
+                                            System.out.println("번호를 다시 입력해주세요 : "); break;
                                     }
                                 if(num4 == 9){
                                     System.out.println();
@@ -129,12 +140,19 @@ public class Application {
                                 }
                             }
                             break;
+
+                        case 0 : break;
+
+                        default :
+                            System.out.println("번호를 다시 입력해주세요 : ");
+                            break;
                     }
                     if (num1 == 0) {
                         System.out.println("프로그램을 종료합니다.");
                         break;
                     }
                 }break;
+
 
             } else if (code == 201 || code == 202 || code == 203 || code == 204 || code == 205 || code == 206 || code == 207 || code == 208) {
 
@@ -166,6 +184,10 @@ public class Application {
                         case 5:
                             registDAO.deleteKidInfo(con);
                             break;
+                        case 0 : break;
+
+                        default:
+                            System.out.println("번호를 다시 입력해주세요 : "); break;
                     }
 
                     if (num2 == 0) {
