@@ -26,6 +26,23 @@
          WHERE B.manager_code = ?
     </entry>
 
+<!--  manage_teacher 테이블에는 없는 teacher 테이블 데이터 조회  -->
+    <entry key="selectNotExistsSuperior">
+        SELECT
+               A.*
+          FROM teacher A
+          LEFT JOIN manage_teacher B ON A.teacher_id = B.Teacher_id
+         WHERE B.manager_code IS NULL
+    </entry>
+
+<!--  직속상관 없는 직원 추가  -->
+    <entry key="addTeacherNotExistsSuperior">
+        INSERT INTO manage_teacher VALUES
+        ( ?,
+          ?,
+          ? )
+    </entry>
+
 <!--  직원의 이름과 사번만 조회  -->
     <entry key="selectTeacherIdAndName">
         SELECT
@@ -101,6 +118,11 @@
     <entry key="deleteTeacherInfo">
         DELETE FROM teacher
          WHERE teacher_id = ?
+    </entry>
+
+    <entry key="deleteTeacherInfo2">
+        DELETE FROM manage_teacher
+        WHERE teacher_id = ?
     </entry>
 
 <!--  전체 원생 정보 조회  -->

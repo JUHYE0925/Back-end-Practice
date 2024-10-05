@@ -77,17 +77,15 @@ public class Application {
                                 System.out.println("< 내 소속 직원 정보 관리 >");
                                 System.out.println("  1. 전체 직원 조회");
                                 System.out.println("  2. 새로운 직원 추가");
-                                System.out.println("  3. 직원 정보 수정");
-                                System.out.println("  4. 직원 정보 삭제");
+                                System.out.println("  3. 직원 정보 삭제");
                                 System.out.println("  9. 뒤로 가기");
                                 int num3 = sc.nextInt();
                                     switch(num3) {
                                         case 1:
                                             registDAO.SelectMySubordinate(con, code);
                                             break;
-    //                                    case 2: // db teacher에 내 직속 상관 컬럼 만들기 -> 직원 추가는 직속 상관 값이 null인 애들만 조회 후 직원 사번으로 추가
-    //                                    case 3: // 수정 필요 이유 없음 안해도 될 듯
-    //                                    case 4: // 삭제101
+                                        case 2: registDAO.addTeacherNotExistsSuperior(con, code); break;
+                                        case 3: registDAO.deleteNotExistsSuperior(con, code); break;
                                     }
                                     if(num3 == 9){
                                         System.out.println();
@@ -179,6 +177,5 @@ public class Application {
                 System.out.println("사번을 잘못 입력하셨습니다. 다시 입력해주세요.");
             }
         }
-
     }
 }
