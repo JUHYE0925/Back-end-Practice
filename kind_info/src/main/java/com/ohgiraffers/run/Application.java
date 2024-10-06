@@ -53,7 +53,7 @@ public class Application {
                                             registDAO.allTeacherInfo(con);
                                             break;
                                         case 2:
-                                            registDAO.selectSpecificTeacher(con);
+                                            registDAO.selectSpecificTeacher(con);  // 코드 리뷰 1번 비교안
                                             break;
                                         case 3:
                                             registDAO.addNewTeacher(con);
@@ -117,10 +117,10 @@ public class Application {
                                             registDAO.allKidsInfo(con);
                                             break;
                                         case 2:
-                                            registDAO.specificKidsInfo(con);
+                                            registDAO.specificKidsInfo(con);  // 코드 리뷰 1번
                                             break;
                                         case 3:
-                                            registDAO.addNewKid(con);
+                                            registDAO.addNewKid(con);  // 특이사항 코드 리뷰 IFNULL 사용
                                             break;
                                         case 4:
                                             registDAO.updateKidsInfo(con);

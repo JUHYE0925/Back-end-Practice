@@ -88,6 +88,14 @@
         WHERE teacher_grade = ?
     </entry>
 
+<!--  직급으로 직원 정보 조회  -->
+    <entry key="selectTeacherByPhone">
+        SELECT
+        *
+        FROM teacher
+        WHERE teacher_phone = ?
+    </entry>
+
 <!--  전체 직원 정보 조회  -->
     <entry key="selectAllTeacherInfo">
         SELECT
@@ -134,8 +142,15 @@
 <!--  전체 원생 정보 조회  -->
     <entry key="selectAllKidsInfo">
         SELECT
-        *
-        FROM kids
+               kids_id,
+               kids_name,
+               kids_birth,
+               kids_class,
+               kids_adress,
+               kids_gender,
+               parents_phone,
+        IFNULL( A.kids_significant, "없음") AS kids_significant
+        FROM kids A
     </entry>
 
 <!--  아이디로 원생 정보 조회  -->

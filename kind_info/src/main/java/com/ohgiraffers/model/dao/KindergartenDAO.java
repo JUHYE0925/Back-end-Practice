@@ -235,7 +235,7 @@ public class KindergartenDAO {
             }
 
             if (result > 0) {
-                System.out.println("해당 직원은 내 직속 부하로 등록되었습니다.");
+                System.out.println("해당 직원은 내 직속 직원으로 등록되었습니다.");
                 System.out.println("확인해보시겠습니까 ? ");
                 System.out.println("1. 예  2. 아니오");
                 int checkNum = sc.nextInt();
@@ -243,7 +243,7 @@ public class KindergartenDAO {
                     SelectMySubordinate(con, myCode);
                 }
             } else {
-                System.out.println("해당 직원을 내 직속 부하로 등록하지 못했습니다.");
+                System.out.println("해당 직원을 내 직속 직원으로 등록하지 못했습니다.");
             }
 
         } else {
@@ -320,182 +320,243 @@ public class KindergartenDAO {
 
     public void selectSpecificTeacher(Connection con){
 
-        PreparedStatement pstmt = null;
-        ResultSet rset = null;
+            PreparedStatement pstmt = null;
+            ResultSet rset = null;
 
-        List<TeacherDTO> teacherList = new ArrayList<>();
+            List<TeacherDTO> teacherList = new ArrayList<>();
 
-        System.out.println("조회할 기준을 선택해주세요 : ");
-        System.out.println(" 1. 사번 ");
-        System.out.println(" 2. 이름 ");
-        System.out.println(" 3. 담당 반 ");
-        System.out.println(" 4. 직급 ");
-        int selectStandard = sc.nextInt();
+            while(true) {
+                System.out.println("조회할 기준을 선택해주세요 : ");
+                System.out.println(" 1. 사번 ");
+                System.out.println(" 2. 이름 ");
+                System.out.println(" 3. 담당 반 ");
+                System.out.println(" 4. 직급 ");
+                int selectStandard = sc.nextInt();
 
-        switch (selectStandard) {
-            case 1:
-                try {
-                    selectTeacherIdAndName(con);
-                    System.out.println("조회할 직원의 사번을 입력해주세요 : ");
-                    int selectTeacherId = sc.nextInt();
+                switch (selectStandard) {
+                    case 1:
+                        while(true) {
+                                selectTeacherIdAndName(con);
+                                System.out.println("조회할 직원의 사번을 입력해주세요 : ");
+                                int selectTeacherId = sc.nextInt();
 
-                    String query1 = prop.getProperty("selectTeacherById");
-                    pstmt = con.prepareStatement(query1);
+                                if(selectedTeacherId(con,selectTeacherId) != null) {
+                                    try {
+                                        String query1 = prop.getProperty("selectTeacherById");
+                                        pstmt = con.prepareStatement(query1);
 
-                    pstmt.setInt(1, selectTeacherId);
-                    rset = pstmt.executeQuery();
+                                        pstmt.setInt(1, selectTeacherId);
+                                        rset = pstmt.executeQuery();
 
-                    if (rset.next()) {
-                        TeacherDTO teacherDTO = new TeacherDTO();
+                                        if (rset.next()) {
+                                            TeacherDTO teacherDTO = new TeacherDTO();
 
-                        teacherDTO.setTeacherId(rset.getInt("teacher_id"));
-                        teacherDTO.setTeacherName(rset.getString("teacher_name"));
-                        teacherDTO.setTeacherGrade(rset.getString("teacher_grade"));
-                        teacherDTO.setTeacherClass(rset.getString("teacher_class"));
-                        teacherDTO.setTeacherBirth(rset.getString("teacher_birth"));
-                        teacherDTO.setTeacherPhone(rset.getString("teacher_phone"));
-                        teacherDTO.setTeacherSalary(rset.getInt("teacher_salary"));
-                        teacherDTO.setTeacherOff(rset.getString("teacher_off"));
+                                            teacherDTO.setTeacherId(rset.getInt("teacher_id"));
+                                            teacherDTO.setTeacherName(rset.getString("teacher_name"));
+                                            teacherDTO.setTeacherGrade(rset.getString("teacher_grade"));
+                                            teacherDTO.setTeacherClass(rset.getString("teacher_class"));
+                                            teacherDTO.setTeacherBirth(rset.getString("teacher_birth"));
+                                            teacherDTO.setTeacherPhone(rset.getString("teacher_phone"));
+                                            teacherDTO.setTeacherSalary(rset.getInt("teacher_salary"));
+                                            teacherDTO.setTeacherOff(rset.getString("teacher_off"));
 
-                        System.out.println(teacherDTO);;
-                    }
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                } finally {
-                    close(pstmt);
-                    close(rset);
-                }
+                                            System.out.println(teacherDTO);
 
-                break;
+                                        }
 
-                case 2:
-                    try {
-                        String query2 = prop.getProperty("selectTeacherByName");
+                                    } catch (SQLException e) {
+                                        throw new RuntimeException(e);
+                                    } finally {
+                                        close(pstmt);
+                                        close(rset);
+                                    }
+                                    break;
+                                } else{
+                                        System.out.println("잘못된 사번을 입력하셨습니다. 다시 입력해주세요.");
+                                }
+                        }
+                        break;
 
-                        pstmt = con.prepareStatement(query2);
-
-                        selectTeacherIdAndName(con);
-                        System.out.println("조회할 직원의 이름을 입력해주세요 : ");
+                    case 2:
                         sc.nextLine();
-                        String selectTeacherName = sc.nextLine();
+                        while(true) {
+                            selectTeacherIdAndName(con);
+                            System.out.println("조회할 직원의 이름을 입력해주세요 : ");
+                            String selectTeacherName = sc.nextLine();
 
-                        pstmt.setString(1, selectTeacherName);
-                        rset = pstmt.executeQuery();
+                            if (selectedTeacherName(con, selectTeacherName) != null) {
+                                try {
+                                    String query2 = prop.getProperty("selectTeacherByName");
 
-                        if (rset.next()) {
-                            TeacherDTO teacherDTO = new TeacherDTO();
+                                    pstmt = con.prepareStatement(query2);
 
-                            teacherDTO.setTeacherId(rset.getInt("teacher_id"));
-                            teacherDTO.setTeacherName(rset.getString("teacher_name"));
-                            teacherDTO.setTeacherGrade(rset.getString("teacher_grade"));
-                            teacherDTO.setTeacherClass(rset.getString("teacher_class"));
-                            teacherDTO.setTeacherBirth(rset.getString("teacher_birth"));
-                            teacherDTO.setTeacherPhone(rset.getString("teacher_phone"));
-                            teacherDTO.setTeacherSalary(rset.getInt("teacher_salary"));
-                            teacherDTO.setTeacherOff(rset.getString("teacher_off"));
+                                    pstmt.setString(1, selectTeacherName);
+                                    rset = pstmt.executeQuery();
 
-                            System.out.println(teacherDTO);
+                                    if (rset.next()) {
+                                        TeacherDTO teacherDTO = new TeacherDTO();
+
+                                        teacherDTO.setTeacherId(rset.getInt("teacher_id"));
+                                        teacherDTO.setTeacherName(rset.getString("teacher_name"));
+                                        teacherDTO.setTeacherGrade(rset.getString("teacher_grade"));
+                                        teacherDTO.setTeacherClass(rset.getString("teacher_class"));
+                                        teacherDTO.setTeacherBirth(rset.getString("teacher_birth"));
+                                        teacherDTO.setTeacherPhone(rset.getString("teacher_phone"));
+                                        teacherDTO.setTeacherSalary(rset.getInt("teacher_salary"));
+                                        teacherDTO.setTeacherOff(rset.getString("teacher_off"));
+
+                                        System.out.println(teacherDTO);
+                                    }
+
+                                } catch (SQLException e) {
+                                    throw new RuntimeException(e);
+                                } finally {
+                                    close(pstmt);
+                                    close(rset);
+                                }
+                                break;
+                            } else {
+                                System.out.println("직원의 이름을 잘못 입력하셨습니다. 다시 입력해주세요.");
+                            }
                         }
+                        break;
+                    case 3:
+                        while(true) {
+                            System.out.println("조회할 직원의 담당 반을 선택해주세요 : ");
+                            System.out.println("1. 햇님반 ");
+                            System.out.println("2. 달님반 ");
+                            System.out.println("3. 별님반 ");
+                            System.out.println("4. 구름반 ");
+                            int selectTeacherClass = sc.nextInt();
 
-                    } catch (SQLException e) {
-                        throw new RuntimeException(e);
-                    } finally {
-                        close(pstmt);
-                        close(rset);
-                    }
+                            String selectedTeacherClass = "";
+                            if(selectTeacherClass == 1){
+                                selectedTeacherClass = "햇님반";
+                            } else if(selectTeacherClass == 2){
+                                selectedTeacherClass = "달님반";
+                            }else if(selectTeacherClass == 3){
+                                selectedTeacherClass = "별님반";
+                            }else if(selectTeacherClass == 4){
+                                selectedTeacherClass = "구름반";
+                            } else {
+                                System.out.print("번호를 잘못 입력하셨습니다.");
+                            }
 
-                    break;
-                case 3:
-                    try {
-                        String query3 = prop.getProperty("selectTeacherByClass");
-                        pstmt = con.prepareStatement(query3);
+                            if(selectedTeacherClass(con, selectedTeacherClass) != null) {
+                                try {
+                                    String query3 = prop.getProperty("selectTeacherByClass");
+                                    pstmt = con.prepareStatement(query3);
 
-                        System.out.println("조회할 직원의 담당 반을 선택해주세요 : ");
-                        System.out.println("1. 햇님반 ");
-                        System.out.println("2. 달님반 ");
-                        System.out.println("3. 별님반 ");
-                        System.out.println("4. 구름반 ");
-                        int selectTeacherClass = sc.nextInt();
-                        switch(selectTeacherClass){
-                            case 1 : pstmt.setString(1, "햇님반"); break;
-                            case 2 : pstmt.setString(1, "달님반"); break;
-                            case 3 : pstmt.setString(1, "별님반"); break;
-                            case 4 : pstmt.setString(1, "구름반"); break;
+                                    switch (selectTeacherClass) {
+                                        case 1:
+                                            pstmt.setString(1, "햇님반");
+                                            break;
+                                        case 2:
+                                            pstmt.setString(1, "달님반");
+                                            break;
+                                        case 3:
+                                            pstmt.setString(1, "별님반");
+                                            break;
+                                        case 4:
+                                            pstmt.setString(1, "구름반");
+                                            break;
+                                    }
+                                    rset = pstmt.executeQuery();
+
+                                    while (rset.next()) {
+
+                                        TeacherDTO teacherDTO = new TeacherDTO();
+
+                                        teacherDTO.setTeacherId(rset.getInt("teacher_id"));
+                                        teacherDTO.setTeacherName(rset.getString("teacher_name"));
+                                        teacherDTO.setTeacherGrade(rset.getString("teacher_grade"));
+                                        teacherDTO.setTeacherClass(rset.getString("teacher_class"));
+                                        teacherDTO.setTeacherPhone(rset.getString("teacher_phone"));
+                                        teacherDTO.setTeacherSalary(rset.getInt("teacher_salary"));
+                                        teacherDTO.setTeacherOff(rset.getString("teacher_off"));
+
+                                        teacherList.add(teacherDTO);
+                                    }
+
+                                } catch (SQLException e) {
+                                    throw new RuntimeException(e);
+                                } finally {
+                                    close(pstmt);
+                                    close(rset);
+                                }
+                                for (TeacherDTO specificTeacherList : teacherList) {
+                                    System.out.println(specificTeacherList);
+                                }
+                                break;
+                            } else {
+                                System.out.println("다시 입력해주세요 : ");
+                            }
                         }
-                        rset = pstmt.executeQuery();
+                        break;
+                    case 4:
+                        while(true) {
+                            System.out.println("조회할 직원의 직급을 선택해주세요 : ");
+                            System.out.println(" 1. 담임 ");
+                            System.out.println(" 2. 보조 ");
+                            int selectTeacherGrade = sc.nextInt();
 
-                        while (rset.next()) {
+                            String selectedTeacherGrade = "";
+                            if(selectTeacherGrade == 1){
+                                selectedTeacherGrade = "담임";
+                            } else if(selectTeacherGrade == 2){
+                                selectedTeacherGrade = "보조";
+                            } else {
+                                System.out.print("번호를 잘못 입력하셨습니다.");
+                            }
+                            if(selectedTeacherGrade(con,selectedTeacherGrade) != null) {
+                                try {
+                                    String query4 = prop.getProperty("selectTeacherByGrade");
+                                    pstmt = con.prepareStatement(query4);
 
-                            TeacherDTO teacherDTO = new TeacherDTO();
+                                    switch (selectTeacherGrade) {
+                                        case 1:
+                                            pstmt.setString(1, "담임");
+                                            break;
+                                        case 2:
+                                            pstmt.setString(1, "보조");
+                                            break;
+                                    }
+                                    rset = pstmt.executeQuery();
 
-                            teacherDTO.setTeacherId(rset.getInt("teacher_id"));
-                            teacherDTO.setTeacherName(rset.getString("teacher_name"));
-                            teacherDTO.setTeacherGrade(rset.getString("teacher_grade"));
-                            teacherDTO.setTeacherClass(rset.getString("teacher_class"));
-                            teacherDTO.setTeacherPhone(rset.getString("teacher_phone"));
-                            teacherDTO.setTeacherSalary(rset.getInt("teacher_salary"));
-                            teacherDTO.setTeacherOff(rset.getString("teacher_off"));
+                                    while (rset.next()) {
+                                        TeacherDTO teacherDTO = new TeacherDTO();
 
-                            teacherList.add(teacherDTO);
+                                        teacherDTO.setTeacherId(rset.getInt("teacher_id"));
+                                        teacherDTO.setTeacherName(rset.getString("teacher_name"));
+                                        teacherDTO.setTeacherGrade(rset.getString("teacher_grade"));
+                                        teacherDTO.setTeacherClass(rset.getString("teacher_class"));
+                                        teacherDTO.setTeacherBirth(rset.getString("teacher_birth"));
+                                        teacherDTO.setTeacherPhone(rset.getString("teacher_phone"));
+                                        teacherDTO.setTeacherSalary(rset.getInt("teacher_salary"));
+                                        teacherDTO.setTeacherOff(rset.getString("teacher_off"));
+
+                                        teacherList.add(teacherDTO);
+                                    }
+
+                                } catch (SQLException e) {
+                                    throw new RuntimeException(e);
+                                } finally {
+                                    close(pstmt);
+                                    close(rset);
+                                }
+                                for (TeacherDTO specificTeacherList : teacherList) {
+                                    System.out.println(specificTeacherList);
+                                }
+                                break;
+                            } else {
+                                System.out.println("다시 입력해주세요 : ");
+                            }
                         }
-
-                    } catch (SQLException e) {
-                        throw new RuntimeException(e);
-                    } finally{
-                        close(pstmt);
-                        close(rset);
-                    }
-                    for(TeacherDTO specificTeacherList : teacherList){
-                        System.out.println(specificTeacherList);
-                    }
-
-                    break;
-
-                case 4:
-                    try {
-                        String query4 = prop.getProperty("selectTeacherByGrade");
-                        pstmt = con.prepareStatement(query4);
-
-                        System.out.println("조회할 직원의 직급을 선택해주세요 : ");
-                        System.out.println(" 1. 담임 ");
-                        System.out.println(" 2. 보조 ");
-                        int selectTeacherGrade = sc.nextInt();
-                        switch(selectTeacherGrade) {
-                            case 1 : pstmt.setString(1, "담임"); break;
-                            case 2 : pstmt.setString(1, "보조"); break;
-                        }
-                        rset = pstmt.executeQuery();
-
-                        while (rset.next()) {
-                            TeacherDTO teacherDTO = new TeacherDTO();
-
-                            teacherDTO.setTeacherId(rset.getInt("teacher_id"));
-                            teacherDTO.setTeacherName(rset.getString("teacher_name"));
-                            teacherDTO.setTeacherGrade(rset.getString("teacher_grade"));
-                            teacherDTO.setTeacherClass(rset.getString("teacher_class"));
-                            teacherDTO.setTeacherBirth(rset.getString("teacher_birth"));
-                            teacherDTO.setTeacherPhone(rset.getString("teacher_phone"));
-                            teacherDTO.setTeacherSalary(rset.getInt("teacher_salary"));
-                            teacherDTO.setTeacherOff(rset.getString("teacher_off"));
-
-                            teacherList.add(teacherDTO);
-
-                        }
-
-                    } catch (SQLException e) {
-                        throw new RuntimeException(e);
-                    }finally{
-                        close(pstmt);
-                        close(rset);
-                    }
-                    for(TeacherDTO specificTeacherList : teacherList){
-                        System.out.println(specificTeacherList);
-                    }
-                    break;
+                        break;
+                } break;
+            }
         }
-    }
-
-    public int maxTeacherID(Connection con){
+        public int maxTeacherID(Connection con){
 
         Statement stmt = null;
         ResultSet rset = null;
@@ -531,41 +592,79 @@ public class KindergartenDAO {
 
         TeacherDTO teacherDTO = new TeacherDTO();
 
-        System.out.println("새로운 직원의 사번을 입력해주세요 : ");
-        System.out.println("지정 가능한 사번은 " + (lastTeacherId + 1) + " 부터 가능합니다.");
-        int newTeacherId = sc.nextInt();
-        teacherDTO.setTeacherId(newTeacherId);
+        while(true){
+            System.out.println("새로운 직원의 사번을 입력해주세요 : ");
+            System.out.println("지정 가능한 사번은 " + (lastTeacherId + 1) + " 부터 가능합니다.");
+            int newTeacherId = sc.nextInt();
+            if(selectedTeacherId(con, newTeacherId) != null) {
+                System.out.println("이미 있는 사번입니다. 다시 입력해주세요 :");
+            } else {
+                teacherDTO.setTeacherId(newTeacherId);
+                break;
+            }
+        }
         System.out.println("새로운 직원의 이름을 입력해주세요 : ");
         sc.nextLine();
         String newTeacherName = sc.nextLine();
         teacherDTO.setTeacherName(newTeacherName);
-        System.out.println("새로운 직원의 직급을 선택해주세요.  ");
-        System.out.println(" 1. 담임 ");
-        System.out.println(" 2. 보조 ");
-        int newTeacherGrade = sc.nextInt();
-        switch(newTeacherGrade){
-            case 1 :  teacherDTO.setTeacherGrade("담임"); break;
-            case 2 :  teacherDTO.setTeacherGrade("보조"); break;
+
+        while(true) {
+            System.out.println("새로운 직원의 직급을 선택해주세요. : ");
+            System.out.println(" 1. 담임 ");
+            System.out.println(" 2. 보조 ");
+            int newTeacherGrade = sc.nextInt();
+            if(newTeacherGrade == 1) {
+                teacherDTO.setTeacherGrade("담임");
+                break;
+            } else if(newTeacherGrade == 2){
+                teacherDTO.setTeacherGrade("보조");
+                break;
+            } else{
+                System.out.println("번호를 다시 입력해주세요.");
+            }
         }
-        System.out.println("새로운 직원의 담당 반을 배정해주세요. ");
-        System.out.println(" 1.햇님반 ");
-        System.out.println(" 2.달님반 ");
-        System.out.println(" 3.별님반 ");
-        System.out.println(" 4.구름반 ");
-        int newTeacherClass = sc.nextInt();
-        switch(newTeacherClass){
-            case 1 : teacherDTO.setTeacherClass("햇님반"); break;
-            case 2 : teacherDTO.setTeacherClass("달님반"); break;
-            case 3 : teacherDTO.setTeacherClass("별님반"); break;
-            case 4 : teacherDTO.setTeacherClass("구름반"); break;
+
+        while(true) {
+            System.out.println("새로운 직원의 담당 반을 배정해주세요. ");
+            System.out.println(" 1.햇님반 ");
+            System.out.println(" 2.달님반 ");
+            System.out.println(" 3.별님반 ");
+            System.out.println(" 4.구름반 ");
+            int newTeacherClass = sc.nextInt();
+
+            if (newTeacherClass == 1) {
+                teacherDTO.setTeacherClass("햇님반");
+                break;
+            } else if (newTeacherClass == 2) {
+                teacherDTO.setTeacherClass("달님반");
+                break;
+            } else if (newTeacherClass == 3) {
+                teacherDTO.setTeacherClass("별님반");
+                break;
+            } else if (newTeacherClass == 4) {
+                teacherDTO.setTeacherClass("구름반");
+                break;
+            } else {
+                System.out.println("잘못 입력하셨습니다. 다시 입력해주세요.");
+            }
         }
+
         System.out.println("새로운 직원의 생년월일 8자리 숫자 전체를 입력해주세요 : ");
         sc.nextLine();
         String newTeacherBirth = sc.nextLine();
         teacherDTO.setTeacherBirth(newTeacherBirth);
-        System.out.println("추가할 직원의 연락처를 입력해주세요 (예.010-XXXX-XXXX) : ");
-        String newTeacherPhone = sc.nextLine();
-        teacherDTO.setTeacherPhone(newTeacherPhone);
+
+        while(true) {
+            System.out.println("추가할 직원의 연락처를 입력해주세요 (예.010-XXXX-XXXX) : ");
+            String newTeacherPhone = sc.nextLine();
+            if(selectedTeacherPhone(con,newTeacherPhone) != null){
+                System.out.println("이미 있는 연락처입니다. 다시 입력해주세요.");
+            } else {
+                teacherDTO.setTeacherPhone(newTeacherPhone);
+                break;
+            }
+        }
+
         System.out.println("새로운 직원의 연봉을 입력해주세요 : ");
         int newTeacherSalary = sc.nextInt();
         teacherDTO.setTeacherSalary(newTeacherSalary);
@@ -631,10 +730,156 @@ public class KindergartenDAO {
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        } //finally {
-          //  close(pstmt);
-          //  close(rset);
-       // }
+        } finally {
+            close(pstmt);
+            close(rset);
+        }
+
+        return teacherDTO;
+    }
+
+    public TeacherDTO selectedTeacherName(Connection con, String selectedTeacherName){
+        PreparedStatement pstmt = null;
+        ResultSet rset = null;
+        TeacherDTO teacherDTO = null;
+
+        try {
+            String query = prop.getProperty("selectTeacherByName");
+            pstmt = con.prepareStatement(query);
+            pstmt.setString(1, selectedTeacherName);
+
+            rset = pstmt.executeQuery();
+
+            if(rset.next()){
+                teacherDTO = new TeacherDTO();
+
+                teacherDTO.setTeacherId(rset.getInt("teacher_id"));
+                teacherDTO.setTeacherName(rset.getString("teacher_name"));
+                teacherDTO.setTeacherGrade(rset.getString("teacher_grade"));
+                teacherDTO.setTeacherClass(rset.getString("teacher_class"));
+                teacherDTO.setTeacherBirth(rset.getString("teacher_birth"));
+                teacherDTO.setTeacherPhone(rset.getString("teacher_phone"));
+                teacherDTO.setTeacherSalary(rset.getInt("teacher_salary"));
+                teacherDTO.setTeacherOff(rset.getString("teacher_off"));
+
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+          close(pstmt);
+          close(rset);
+        }
+
+        return teacherDTO;
+    }
+
+    public TeacherDTO selectedTeacherClass(Connection con, String selectedTeacherClass){
+        PreparedStatement pstmt = null;
+        ResultSet rset = null;
+        TeacherDTO teacherDTO = null;
+
+        try {
+            String query = prop.getProperty("selectTeacherByClass");
+            pstmt = con.prepareStatement(query);
+            pstmt.setString(1, selectedTeacherClass);
+
+            rset = pstmt.executeQuery();
+
+            if(rset.next()){
+                teacherDTO = new TeacherDTO();
+
+                teacherDTO.setTeacherId(rset.getInt("teacher_id"));
+                teacherDTO.setTeacherName(rset.getString("teacher_name"));
+                teacherDTO.setTeacherGrade(rset.getString("teacher_grade"));
+                teacherDTO.setTeacherClass(rset.getString("teacher_class"));
+                teacherDTO.setTeacherBirth(rset.getString("teacher_birth"));
+                teacherDTO.setTeacherPhone(rset.getString("teacher_phone"));
+                teacherDTO.setTeacherSalary(rset.getInt("teacher_salary"));
+                teacherDTO.setTeacherOff(rset.getString("teacher_off"));
+
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            close(pstmt);
+            close(rset);
+        }
+
+        return teacherDTO;
+    }
+
+
+
+    public TeacherDTO selectedTeacherGrade(Connection con, String selectedTeacherGrade){
+        PreparedStatement pstmt = null;
+        ResultSet rset = null;
+        TeacherDTO teacherDTO = null;
+
+        try {
+            String query = prop.getProperty("selectTeacherByGrade");
+            pstmt = con.prepareStatement(query);
+            pstmt.setString(1, selectedTeacherGrade);
+
+            rset = pstmt.executeQuery();
+
+            if(rset.next()){
+                teacherDTO = new TeacherDTO();
+
+                teacherDTO.setTeacherId(rset.getInt("teacher_id"));
+                teacherDTO.setTeacherName(rset.getString("teacher_name"));
+                teacherDTO.setTeacherGrade(rset.getString("teacher_grade"));
+                teacherDTO.setTeacherClass(rset.getString("teacher_class"));
+                teacherDTO.setTeacherBirth(rset.getString("teacher_birth"));
+                teacherDTO.setTeacherPhone(rset.getString("teacher_phone"));
+                teacherDTO.setTeacherSalary(rset.getInt("teacher_salary"));
+                teacherDTO.setTeacherOff(rset.getString("teacher_off"));
+
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            close(pstmt);
+            close(rset);
+        }
+
+        return teacherDTO;
+    }
+
+    public TeacherDTO selectedTeacherPhone(Connection con, String selectedTeacherPhone){
+        PreparedStatement pstmt = null;
+        ResultSet rset = null;
+        TeacherDTO teacherDTO = null;
+
+        try {
+            String query = prop.getProperty("selectTeacherByPhone");
+            pstmt = con.prepareStatement(query);
+            pstmt.setString(1, selectedTeacherPhone);
+
+            rset = pstmt.executeQuery();
+
+            if(rset.next()){
+                teacherDTO = new TeacherDTO();
+
+                teacherDTO.setTeacherId(rset.getInt("teacher_id"));
+                teacherDTO.setTeacherName(rset.getString("teacher_name"));
+                teacherDTO.setTeacherGrade(rset.getString("teacher_grade"));
+                teacherDTO.setTeacherClass(rset.getString("teacher_class"));
+                teacherDTO.setTeacherBirth(rset.getString("teacher_birth"));
+                teacherDTO.setTeacherPhone(rset.getString("teacher_phone"));
+                teacherDTO.setTeacherSalary(rset.getInt("teacher_salary"));
+                teacherDTO.setTeacherOff(rset.getString("teacher_off"));
+
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            close(pstmt);
+            close(rset);
+        }
 
         return teacherDTO;
     }
@@ -779,6 +1024,213 @@ public class KindergartenDAO {
             System.out.println("직원 정보를 수정하는데 실패하였습니다.");
         }
     }
+
+//    public void updateTeacherInfo(Connection con){
+//
+//        while(true) {
+//            PreparedStatement pstmt = null;
+//            int result = 0;
+//            allTeacherInfo(con);
+//            System.out.println("정보를 수정할 직원의 사번을 입력해주세요 : ");
+//            int teacherId = sc.nextInt();
+//            if(selectedTeacherId(con, teacherId) != null) {
+//
+//                TeacherDTO teacherDTO = selectedTeacherId(con, teacherId);
+//
+//                while(true) {
+//                    System.out.println("수정할 정보를 선택해주세요 : ");
+//                    System.out.println(" 1. 전체 (이름, 직급, 반, 연락처, 연봉, 휴가) ");
+//                    System.out.println(" 2. 이름 ");
+//                    System.out.println(" 3. 직급 ");
+//                    System.out.println(" 4. 반 ");
+//                    System.out.println(" 5. 연락처 ");
+//                    System.out.println(" 6. 연봉 ");
+//                    System.out.println(" 7. 휴가 ");
+//                    int selectedTypeOfInfo = sc.nextInt();
+//                    sc.nextLine();
+//
+//                    String query = prop.getProperty("updateTeacherInfo");
+//                    try {
+//                        pstmt = con.prepareStatement(query);
+//
+//                        if (selectedTypeOfInfo == 1) {
+//
+//                            System.out.println("수정할 이름을 입력해주세요 : ");
+//                            String newName1 = sc.nextLine();
+//                            teacherDTO.setTeacherName(newName1);
+//
+//                            while (true) {
+//                                System.out.println("수정할 직급을 선택해주세요 : ");
+//                                System.out.println(" 1. 담임 ");
+//                                System.out.println(" 2. 보조 ");
+//                                int newGrade1 = sc.nextInt();
+//                                if (newGrade1 == 1) {
+//                                    teacherDTO.setTeacherGrade("담임");
+//                                    break;
+//                                } else if (newGrade1 == 2) {
+//                                    teacherDTO.setTeacherGrade("보조");
+//                                    break;
+//                                } else {
+//                                    System.out.println("번호를 다시 입력해주세요.");
+//                                }
+//                            }
+//
+//                            while (true) {
+//                                System.out.println("수정할 반을 선택해주세요 : ");
+//                                System.out.println(" 1.햇님반 ");
+//                                System.out.println(" 2.달님반 ");
+//                                System.out.println(" 3.별님반 ");
+//                                System.out.println(" 4.구름반 ");
+//                                int newClass1 = sc.nextInt();
+//                                sc.nextLine();
+//
+//                                if (newClass1 == 1) {
+//                                    teacherDTO.setTeacherClass("햇님반");
+//                                    break;
+//                                } else if (newClass1 == 2) {
+//                                    teacherDTO.setTeacherClass("달님반");
+//                                    break;
+//                                } else if (newClass1 == 3) {
+//                                    teacherDTO.setTeacherClass("별님반");
+//                                    break;
+//                                } else if (newClass1 == 4) {
+//                                    teacherDTO.setTeacherClass("구름반");
+//                                    break;
+//                                } else {
+//                                    System.out.println("잘못 입력하셨습니다. 다시 입력해주세요.");
+//                                }
+//                            }
+//
+//                            while (true) {
+//                                System.out.println("수정할 연락처를 입력해주세요 (예.010-XXXX-XXXX) : ");
+//                                String newPhone1 = sc.nextLine();
+//                                if (selectedTeacherPhone(con, newPhone1) != null) {
+//                                    System.out.println("이미 있는 연락처입니다. 다시 입력해주세요.");
+//                                } else {
+//                                    teacherDTO.setTeacherPhone(newPhone1);
+//                                    break;
+//                                }
+//                            }
+//
+//                            System.out.println("수정할 연봉을 입력해주세요 : ");
+//                            int newSalary1 = sc.nextInt();
+//                            sc.nextLine();
+//                            teacherDTO.setTeacherSalary(newSalary1);
+//
+//                            System.out.println("수정할 휴가 내용을 입력해주세요 : ");
+//                            String newOff1 = sc.nextLine();
+//                            teacherDTO.setTeacherOff(newOff1);
+//                            break;
+//                        } else if (selectedTypeOfInfo == 2) {
+//                            System.out.print("수정할 이름을 입력해주세요 : ");
+//                            String newName = sc.nextLine();
+//                            teacherDTO.setTeacherName(newName);
+//                            break;
+//                        } else if (selectedTypeOfInfo == 3) {
+//                            while (true) {
+//                                System.out.println("수정할 직급을 선택해주세요 : ");
+//                                System.out.println(" 1. 담임 ");
+//                                System.out.println(" 2. 보조 ");
+//                                int newGrade = sc.nextInt();
+//                                if (newGrade == 1) {
+//                                    teacherDTO.setTeacherGrade("담임");
+//                                    break;
+//                                } else if (newGrade == 2) {
+//                                    teacherDTO.setTeacherGrade("보조");
+//                                    break;
+//                                } else {
+//                                    System.out.println("번호를 다시 입력해주세요.");
+//                                }
+//                            }
+//
+//                        } else if (selectedTypeOfInfo == 4) {
+//                            while (true) {
+//                                System.out.println("수정할 반을 선택해주세요 : ");
+//                                System.out.println(" 1.햇님반 ");
+//                                System.out.println(" 2.달님반 ");
+//                                System.out.println(" 3.별님반 ");
+//                                System.out.println(" 4.구름반 ");
+//                                int newClass = sc.nextInt();
+//
+//                                if (newClass == 1) {
+//                                    teacherDTO.setTeacherClass("햇님반");
+//                                    break;
+//                                } else if (newClass == 2) {
+//                                    teacherDTO.setTeacherClass("달님반");
+//                                    break;
+//                                } else if (newClass == 3) {
+//                                    teacherDTO.setTeacherClass("별님반");
+//                                    break;
+//                                } else if (newClass == 4) {
+//                                    teacherDTO.setTeacherClass("구름반");
+//                                    break;
+//                                } else {
+//                                    System.out.println("잘못 입력하셨습니다. 다시 입력해주세요.");
+//                                }
+//                            }
+//                            break;
+//                        } else if (selectedTypeOfInfo == 5) {
+//                            while (true) {
+//                                System.out.println("수정할 연락처를 입력해주세요 (예.010-XXXX-XXXX) : ");
+//                                String newPhone = sc.nextLine();
+//                                if (selectedTeacherPhone(con, newPhone) != null) {
+//                                    System.out.println("이미 있는 연락처입니다. 다시 입력해주세요.");
+//                                } else {
+//                                    teacherDTO.setTeacherPhone(newPhone);
+//                                    break;
+//                                }
+//                            }
+//                            break;
+//                        } else if (selectedTypeOfInfo == 6) {
+//                            System.out.println("수정할 연봉을 입력해주세요 : ");
+//                            int newSalary = sc.nextInt();
+//                            teacherDTO.setTeacherSalary(newSalary);
+//                            break;
+//                        } else if (selectedTypeOfInfo == 7) {
+//                            System.out.println("수정할 휴가 내용을 입력해주세요 : ");
+//                            String newOff = sc.nextLine();
+//                            teacherDTO.setTeacherOff(newOff);
+//                            break;
+//                        } else {
+//                            System.out.println("번호를 다시 입력해주세요.");
+//                        }
+//
+//                        pstmt.setString(1, teacherDTO.getTeacherName());
+//                        pstmt.setString(2, teacherDTO.getTeacherGrade());
+//                        pstmt.setString(3, teacherDTO.getTeacherClass());
+//                        pstmt.setString(4, teacherDTO.getTeacherPhone());
+//                        pstmt.setInt(5, teacherDTO.getTeacherSalary());
+//                        pstmt.setString(6, teacherDTO.getTeacherOff());
+//                        pstmt.setInt(7, teacherDTO.getTeacherId());
+//
+//                        result = pstmt.executeUpdate();
+//
+//
+//                    } catch (SQLException e) {
+//                        throw new RuntimeException(e);
+//                    } finally {
+//                        close(pstmt);
+//                    }
+//
+//                    if (result > 0) {
+//                        System.out.println("직원 정보를 성공적으로 수정하였습니다.");
+//                        System.out.println("수정된 내용을 확인하시겠습니까? ");
+//                        System.out.println(" 1. 예   2. 아니요 ");
+//                        int checkNum = sc.nextInt();
+//                        if (checkNum == 1) {
+//                            allTeacherInfo(con);
+//                            break;
+//                        }
+//                    } else {
+//                        System.out.println("직원 정보를 수정하는데 실패하였습니다.");
+//                    }
+//                    break;
+//                }
+//            } else {
+//                System.out.println("사번을 다시 입력해주세요.");
+//            }
+//        }
+//    }
 
     public void deleteTeacherInfo(Connection con){
 
