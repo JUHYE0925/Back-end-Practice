@@ -51,6 +51,12 @@
           FROM teacher
     </entry>
 
+    <entry key="selectTeacherId">
+        SELECT
+        teacher_id
+        FROM teacher
+    </entry>
+
 <!--  마지막 직원 사번 조회  -->
     <entry key="idOfLastTeacher">
         SELECT
@@ -146,10 +152,10 @@
         *
         FROM kids
         WHERE kids_id = ? OR
-        kids_name = ? OR
-        kids_birth LIKE ? OR
-        kids_class = ? OR
-        kids_gender = ?
+              kids_name = ? OR
+              kids_birth LIKE ? OR
+              kids_class = ? OR
+              kids_gender = ?
     </entry>
 
 <!--  마지막 원생 ID 조회  -->

@@ -112,6 +112,34 @@ public class KindergartenDAO {
         return teacherList;
     }
 
+//    public List<Map<Integer, String>> selectTeacherId(Connection con){
+//
+//        Statement stmt = null;
+//        ResultSet rset = null;
+//
+//        List<Map<Integer, String>> teacherListMap = null;
+//
+//        String query = prop.getProperty("selectTeacherId");
+//        try {
+//            stmt = con.createStatement();
+//            rset = stmt.executeQuery(query);
+//
+//            teacherListMap = new ArrayList<>();
+//
+//            while(rset.next()){
+//                Map<Integer, String> teacherIdAndNameMap = new HashMap<>();
+//                teacherIdAndNameMap.put(rset.getInt("teacher_id"), rset.getString("teacher_name"));
+////                teacherIdAndNameMap.put(rset.getInt("teacher_id"));
+//
+//                teacherListMap.add(teacherIdAndNameMap);
+//            }
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
+//
+//        return teacherListMap;
+//    }
+
     public List<TeacherDTO> selectNotExistsSuperior(Connection con){
 
         Statement stmt = null;
@@ -153,29 +181,24 @@ public class KindergartenDAO {
 
     public void addTeacherNotExistsSuperior(Connection con, int myCode){
 
+        TeacherDTO teacherDTO = new TeacherDTO();
+
         List<TeacherDTO> teacherList = selectNotExistsSuperior(con);
-        teacherList = new List<Map<String, String>>;
-        if(teacherList != null) {
-            while (true){
-                TeacherDTO teacherDTO = new TeacherDTO();
-                System.out.println("************* = " + teacherList.get(teacherDTO.getTeacherId()));
-                System.out.println("!!!!!!!!!!! = " + teacherList[0:1][1:1][2:1]);
-                //            selectNotExistsSuperior(con);
-                System.out.println("위의 직원들 중 추가하고싶은 직원의 사번을 입력해주세요 : ");
-                int mySubordinateNum = sc.nextInt();
-                if (mySubordinateNum == teacherDTO.getTeacherId()) {
+        if(teacherList != null){
+            System.out.println("위의 직원들 중 추가하고싶은 직원의 사번을 입력해주세요 : ");
+            int mySubordinateNum = sc.nextInt();
 
-                    PreparedStatement pstmt1 = null;
-                    ResultSet rset = null;
-                    teacherDTO.setTeacherId(mySubordinateNum);
-                    try {
-                        String query1 = prop.getProperty("selectTeacherById");
-                        pstmt1 = con.prepareStatement(query1);
-                        pstmt1.setInt(1, teacherDTO.getTeacherId());
+            PreparedStatement pstmt1 = null;
+            ResultSet rset = null;
+            teacherDTO.setTeacherId(mySubordinateNum);
+            try {
+                    String query1 = prop.getProperty("selectTeacherById");
+                    pstmt1 = con.prepareStatement(query1);
+                    pstmt1.setInt(1, teacherDTO.getTeacherId());
 
-                        rset = pstmt1.executeQuery();
+                    rset = pstmt1.executeQuery();
 
-                        if (rset.next()) {
+                    if (rset.next()) {
                             TeacherDTO teacherDTO1 = new TeacherDTO();
                             teacherDTO.setTeacherId(rset.getInt("teacher_id"));
                             teacherDTO.setTeacherName(rset.getString("teacher_name"));
@@ -185,47 +208,44 @@ public class KindergartenDAO {
                             teacherDTO.setTeacherPhone(rset.getString("teacher_phone"));
                             teacherDTO.setTeacherSalary(rset.getInt("teacher_salary"));
                             teacherDTO.setTeacherOff(rset.getString("teacher_off"));
-                        }
-                    } catch (SQLException e) {
-                        throw new RuntimeException(e);
-                    } finally {
-                        close(pstmt1);
-                        close(rset);
                     }
-
-                    PreparedStatement pstmt = null;
-                    int result = 0;
-
-                    try {
-                        String query = prop.getProperty("addTeacherNotExistsSuperior");
-                        pstmt = con.prepareStatement(query);
-                        pstmt.setInt(1, myCode);
-                        pstmt.setInt(2, teacherDTO.getTeacherId());
-                        pstmt.setString(3, teacherDTO.getTeacherName());
-
-                        result = pstmt.executeUpdate();
-
-                    } catch (SQLException e) {
-                        throw new RuntimeException(e);
-                    } finally {
-                        close(pstmt);
-                    }
-
-                    if (result > 0) {
-                        System.out.println("해당 직원은 내 직속 부하로 등록되었습니다.");
-                        System.out.println("확인해보시겠습니까 ? ");
-                        System.out.println("1. 예  2. 아니오");
-                        int checkNum = sc.nextInt();
-                        if (checkNum == 1) {
-                            SelectMySubordinate(con, myCode);
-                        }
-                    } else {
-                        System.out.println("해당 직원을 내 직속 부하로 등록하지 못했습니다.");
-                    }
-                } else {
-                    System.out.println("사번을 다시 입력해주세요 : ");
-                }
+            } catch (SQLException e) {
+                    throw new RuntimeException(e);
+            } finally {
+                    close(pstmt1);
+                    close(rset);
             }
+
+            PreparedStatement pstmt = null;
+            int result = 0;
+
+            try {
+                    String query = prop.getProperty("addTeacherNotExistsSuperior");
+                    pstmt = con.prepareStatement(query);
+                    pstmt.setInt(1, myCode);
+                    pstmt.setInt(2, teacherDTO.getTeacherId());
+                    pstmt.setString(3, teacherDTO.getTeacherName());
+
+                    result = pstmt.executeUpdate();
+
+            } catch (SQLException e) {
+                    throw new RuntimeException(e);
+            } finally {
+                    close(pstmt);
+            }
+
+            if (result > 0) {
+                System.out.println("해당 직원은 내 직속 부하로 등록되었습니다.");
+                System.out.println("확인해보시겠습니까 ? ");
+                System.out.println("1. 예  2. 아니오");
+                int checkNum = sc.nextInt();
+                if (checkNum == 1) {
+                    SelectMySubordinate(con, myCode);
+                }
+            } else {
+                System.out.println("해당 직원을 내 직속 부하로 등록하지 못했습니다.");
+            }
+
         } else {
             System.out.println("모든 직원이 원장님 혹은 부원장님에게 소속되어 있습니다.");
         }
@@ -842,6 +862,7 @@ public class KindergartenDAO {
 
     public void specificKidsInfo(Connection con){
 
+        // DB를 조회할 DTO
         KidsDTO kidsDTO = new KidsDTO();
         PreparedStatement pstmt = null;
         ResultSet rset = null;
@@ -919,6 +940,7 @@ public class KindergartenDAO {
             rset = pstmt.executeQuery();
 
             while(rset.next()){
+                // DB에서 불러온 값을 담는 DTO
                 KidsDTO newKidsDTO = new KidsDTO();
 
                 newKidsDTO.setKidsId(rset.getInt("kids_id"));

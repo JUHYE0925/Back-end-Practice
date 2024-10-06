@@ -16,6 +16,7 @@ public class Application {
         Connection con = getConnection();
         KindergartenDAO registDAO = new KindergartenDAO();
 
+
         Scanner sc = new Scanner(System.in);
         // 관리자 : 모든 테이블 조회 및 crud 가능
 
@@ -153,8 +154,9 @@ public class Application {
                     }
                 }break;
 
-
-            } else if (code == 201 || code == 202 || code == 203 || code == 204 || code == 205 || code == 206 || code == 207 || code == 208) {
+                // code가 직원 id와 통일되는 사람들로...(나중에 추가되는 직원들의 사번으로도 조회될 수 있게...
+//            } else if (code == 201 || code == 202 || code == 203 || code == 204 || code == 205 || code == 206 || code == 207 || code == 208) {
+            } else if (registDAO.selectedTeacherId(con, code) != null) {
 
                 while(true) {
                     System.out.println();
