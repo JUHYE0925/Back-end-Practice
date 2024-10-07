@@ -30,7 +30,7 @@ JDBC(DAO)
 ### <ERD>
 
 ![image](https://github.com/user-attachments/assets/83bf0af1-4b78-4de3-ba3f-6a4e8afe32d4)
-![image](https://github.com/user-attachments/assets/958eb5ff-c44d-46ae-857f-20113efe559d)
+![image](https://github.com/user-attachments/assets/47d0d3cf-70e0-4dc3-9ada-201763c21ec2)
 
 
 ----------------------------------------------------------------------------------
