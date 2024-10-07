@@ -29,7 +29,9 @@ JDBC(DAO)
 ----------------------------------------------------------------------------------
 ### <ERD>
 
-![info kind ERD](https://github.com/user-attachments/assets/f37596d0-7995-4828-8351-09e84bc6c687)
+![image](https://github.com/user-attachments/assets/83bf0af1-4b78-4de3-ba3f-6a4e8afe32d4)
+![image](https://github.com/user-attachments/assets/958eb5ff-c44d-46ae-857f-20113efe559d)
+
 
 ----------------------------------------------------------------------------------
 
