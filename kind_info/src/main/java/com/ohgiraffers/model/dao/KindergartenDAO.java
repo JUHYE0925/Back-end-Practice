@@ -1312,6 +1312,29 @@ public class KindergartenDAO {
         }
     }
 
+    public void selectKidsIdAndName(Connection con){
+
+        Statement stmt = null;
+        ResultSet rset = null;
+
+        try {
+            String query = prop.getProperty("selectKidsNameAndId");
+            stmt = con.createStatement();
+
+            rset = stmt.executeQuery(query);
+
+            while(rset.next()){
+                System.out.println(rset.getInt("kids_id") + ", " + rset.getString("kids_name"));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            close(stmt);
+            close(rset);
+        }
+
+    }
+
     public void specificKidsInfo(Connection con){
 
         // DB를 조회할 DTO
@@ -1335,11 +1358,13 @@ public class KindergartenDAO {
 
             switch(standard){
                 case 1 :
+//                    selectKidsIdAndName(con);
                     System.out.println("조회하실 원생의 ID를 입력해주세요 : ");
                     int kidsId = sc.nextInt();
                     kidsDTO.setKidsId(kidsId);
                     break;
                 case 2 :
+//                    selectKidsIdAndName(con);
                     System.out.println("조회하실 원생의 이름을 입력해주세요 : ");
                     sc.nextLine();
                     String kidsName = sc.nextLine();
@@ -1441,6 +1466,7 @@ public class KindergartenDAO {
         int result = 0;
 
         try {
+            sc.nextLine();
             System.out.println("새로운 원생의 이름을 입력해주세요 : ");
             String newKidName = sc.nextLine();
             kidsDTO.setKidsName(newKidName);
@@ -1481,7 +1507,7 @@ public class KindergartenDAO {
                     String newKidSignificant = sc.nextLine();
                     kidsDTO.setKidsSignificant(newKidSignificant);
                     break;
-                case 2 : kidsDTO.setKidsSignificant(null);
+                case 2 : kidsDTO.setKidsSignificant(null); break;
             }
 
             String query = prop.getProperty("insertNewKid");

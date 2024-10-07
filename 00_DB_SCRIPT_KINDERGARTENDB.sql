@@ -90,14 +90,14 @@ INSERT INTO manager VALUES (101, '권지옹', '19610829', '원장', '010-1961-08
 INSERT INTO manager VALUES (102, '강말자', '19630532', '부원장', '010-1963-0532', DEFAULT);
 
 -- 선생님 테이블 데이터 입력
-INSERT INTO teacher VALUES (201, '나미리', '담임', '햇님반', '19900204', '010-1990-0204', 2500000, DEFAULT);
-INSERT INTO teacher VALUES (202, '채성화', '담임', '달님반', '19900706', '010-1990-0706', 2500000, '출산휴가예정');
-INSERT INTO teacher VALUES (203, '차은주', '담임', '별님반', '19910123', '010-1991-0123', 2400000, DEFAULT);
-INSERT INTO teacher VALUES (204, '이창민', '담임', '구름반', '19920502', '010-1992-0502', 2350000, DEFAULT);
-INSERT INTO teacher VALUES (205, '봉미선', '보조', '햇님반', '19951010', '010-1995-1010', 2250000, DEFAULT);
-INSERT INTO teacher VALUES (206, '유이슬', '보조', '달님반', '19991123', '010-1999-1123', 2250000, DEFAULT);
-INSERT INTO teacher VALUES (207, '김흑곰', '보조', '별님반', '19940915', '010-1994-0915', 2250000, DEFAULT);
-INSERT INTO teacher VALUES (208, '엄상현', '보조', '구름반', '19951122', '010-1995-1122', 2200000, DEFAULT);
+INSERT INTO teacher VALUES (201, '나미리', '담임', '햇님반', '19900204', '010-1990-0204', 25000000, DEFAULT);
+INSERT INTO teacher VALUES (202, '채성화', '담임', '달님반', '19900706', '010-1990-0706', 25000000, '출산휴가예정');
+INSERT INTO teacher VALUES (203, '차은주', '담임', '별님반', '19910123', '010-1991-0123', 24000000, DEFAULT);
+INSERT INTO teacher VALUES (204, '이창민', '담임', '구름반', '19920502', '010-1992-0502', 23500000, DEFAULT);
+INSERT INTO teacher VALUES (205, '봉미선', '보조', '햇님반', '19951010', '010-1995-1010', 22500000, DEFAULT);
+INSERT INTO teacher VALUES (206, '유이슬', '보조', '달님반', '19991123', '010-1999-1123', 22500000, DEFAULT);
+INSERT INTO teacher VALUES (207, '김흑곰', '보조', '별님반', '19940915', '010-1994-0915', 22500000, DEFAULT);
+INSERT INTO teacher VALUES (208, '엄상현', '보조', '구름반', '19951122', '010-1995-1122', 22000000, DEFAULT);
 
 -- 원생 테이블 테이터 입력
 INSERT INTO kids VALUES (301, '강치타', '20180523', '햇님반', '서울특별시 마포구 대흥동', '남', '010-2018-0523', '달리기 잘함');

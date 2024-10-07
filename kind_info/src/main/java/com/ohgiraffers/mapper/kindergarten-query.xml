@@ -156,16 +156,38 @@
 <!--  아이디로 원생 정보 조회  -->
     <entry key="selectKidsById">
        SELECT
-              *
-         FROM kids
+              kids_id,
+              kids_name,
+              kids_birth,
+              kids_class,
+              kids_adress,
+              kids_gender,
+              parents_phone,
+              IFNULL( A.kids_significant, "없음") AS kids_significant
+         FROM kids A
+        WHERE kids_id = ?
+    </entry>
+
+    <entry key="selectKidsNameAndId">
+        SELECT
+               kids_id,
+               kids_name,
+        FROM kids A
         WHERE kids_id = ?
     </entry>
 
 <!--  특정 원생 정보 조회  -->
     <entry key="specificKidsInfo">
         SELECT
-        *
-        FROM kids
+               kids_id,
+               kids_name,
+               kids_birth,
+               kids_class,
+               kids_adress,
+               kids_gender,
+               parents_phone,
+        IFNULL( A.kids_significant, "없음") AS kids_significant
+        FROM kids A
         WHERE kids_id = ? OR
               kids_name = ? OR
               kids_birth LIKE ? OR
@@ -197,7 +219,7 @@
 
 <!--  원생 정보 수정  -->
     <entry key="updateKidInfo">
-        UPDATE kids
+        UPDATE kids A
            SET kids_name = ?,
                kids_birth = ?,
                kids_class = ?,
