@@ -471,6 +471,7 @@ public class KindergartenDAO {
                                         teacherDTO.setTeacherName(rset.getString("teacher_name"));
                                         teacherDTO.setTeacherGrade(rset.getString("teacher_grade"));
                                         teacherDTO.setTeacherClass(rset.getString("teacher_class"));
+                                        teacherDTO.setTeacherBirth(rset.getString("teacher_birth"));
                                         teacherDTO.setTeacherPhone(rset.getString("teacher_phone"));
                                         teacherDTO.setTeacherSalary(rset.getInt("teacher_salary"));
                                         teacherDTO.setTeacherOff(rset.getString("teacher_off"));
